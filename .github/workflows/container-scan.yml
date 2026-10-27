@@ -1,3 +1,4 @@
+
 name: Container Security Analysis
 
 on:
@@ -25,7 +26,7 @@ jobs:
           docker build -t container-security-demo:${{ github.sha }} .
 
       - name: Scan Container Image
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           image-ref: container-security-demo:${{ github.sha }}
           format: sarif
@@ -35,12 +36,13 @@ jobs:
           exit-code: "0"
 
       - name: Upload Trivy Results
+        if: always()
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: trivy-results.sarif
 
       - name: Security Gate
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           image-ref: container-security-demo:${{ github.sha }}
           format: table
